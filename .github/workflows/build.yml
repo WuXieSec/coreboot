@@ -5,6 +5,7 @@ on:
       - dasharo
       - dasharo-24.12
       - dasharo-25.12
+      - capsules-v2
   push:
     branches:
       - dasharo-24.12
