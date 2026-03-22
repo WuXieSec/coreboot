@@ -496,6 +496,19 @@ struct soc_intel_alderlake_config {
 		IGD_SM_60MB = 0xFE,
 	} igd_dvmt50_pre_alloc;
 
+	enum {
+		IGD_AP_SZ_128MB = 0x00,
+		IGD_AP_SZ_256MB = 0x01,
+		IGD_AP_SZ_512MB = 0x02,
+		/*
+		 * Values below require use of above 4G MMIO,
+		 * otherwise FSP will hang
+		 */
+		IGD_AP_SZ_4G_512MB = 0x03,
+		IGD_AP_SZ_4G_1024MB = 0x07,
+		IGD_AP_SZ_4G_2048MB = 0x15,
+	} igd_aperture_size;
+
 	bool skip_ext_gfx_scan;
 	bool eist_enable;
 	bool enable_c6dram;
@@ -610,6 +623,9 @@ struct soc_intel_alderlake_config {
 	 * Default is "false".
 	 */
 	bool dmi_power_optimize_disable;
+
+	/* Enable/Disable Energy Efficient Turbo */
+	bool energy_efficient_turbo;
 
 	/*
 	 * Used to communicate the power delivery design capability of the board. This
@@ -814,6 +830,15 @@ struct soc_intel_alderlake_config {
 		PD_TIER_PREMIUM = 25000,
 		PD_TIER_VOLUME  = 27000
 	} vccin_aux_imon_iccmax;
+
+	/* Enable / Disable(default) Type C Port x Convert to TypeA */
+	bool enabletcsscovtypea[4];
+
+	/*
+	 * PCH xhci port x for Type C Port x mapping.
+	 * Input PCH xhci port x for Type C Port 0 mapping.
+	 */
+	uint8_t mappingpchxhciusba[4];
 };
 
 typedef struct soc_intel_alderlake_config config_t;
