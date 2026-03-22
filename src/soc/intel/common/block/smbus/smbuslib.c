@@ -9,24 +9,6 @@
 #include <device/smbus_host.h>
 #include "smbuslib.h"
 
-static void update_spd_len(struct spd_block *blk)
-{
-	u8 i, j = 0;
-	for (i = 0 ; i < CONFIG_DIMM_MAX; i++)
-		if (blk->spd_array[i] != NULL)
-			j |= blk->spd_array[i][SPD_DRAM_TYPE];
-
-	/* If spd used is DDR5, then its length is 1024 byte. */
-	if (j == SPD_DRAM_DDR5)
-		blk->len = SPD_LEN_DDR5;
-	/* If spd used is DDR4, then its length is 512 byte. */
-	else if (j == SPD_DRAM_DDR4)
-		blk->len = SPD_PAGE_LEN_DDR4;
-	else
-		blk->len = SPD_PAGE_LEN;
-}
-
-
 static void spd_read(u8 *spd, u8 addr)
 {
 	u16 i;
@@ -126,7 +108,7 @@ static int get_spd(u8 *spd, u8 addr)
 		}
 
 		/* Check if module is DDR4, DDR4 spd is 512 byte. */
-		if (spd[SPD_DRAM_TYPE] == SPD_DRAM_DDR4 &&
+		if (spd[SPD_MEMORY_TYPE] == SPD_MEMORY_TYPE_DDR4_SDRAM &&
 					CONFIG_DIMM_SPD_SIZE > SPD_PAGE_LEN) {
 			/* Switch to page 1 */
 			smbus_write_byte(SPD_PAGE_1, 0, 0);
